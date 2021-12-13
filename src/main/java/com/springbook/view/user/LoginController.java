@@ -21,11 +21,15 @@ public class LoginController {
 	}
 	
 	@RequestMapping(value="/login.do", method=RequestMethod.POST)
-	public String login(UserVO vo, UserDAO userDAO) {
+	public String login(UserVO vo, UserDAO userDAO, HttpSession session) {
 		System.out.println("로그인 인증 처리");
+		UserVO user = userDAO.getUser(vo);
 		
-		if (userDAO.getUser(vo) != null) return "getBoardList.do";
-		else return "login.jsp";
+		if (user != null) {
+			session.setAttribute("userName", user.getName());
+			return "getBoardList.do";
+		} else 
+			return "login.jsp";
 	}
 	
 	@RequestMapping("/logout.do")
