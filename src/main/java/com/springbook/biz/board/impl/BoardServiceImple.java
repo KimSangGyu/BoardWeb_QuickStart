@@ -10,7 +10,7 @@ import com.springbook.biz.board.BoardVO;
 
 @Service("boardService")
 public class BoardServiceImple implements BoardService {
-
+	
 	@Autowired
 	private BoardDAO boardDAO;
 	
