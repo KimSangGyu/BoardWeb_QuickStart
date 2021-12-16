@@ -11,7 +11,7 @@ public class CommonExceptionHandler {
 	public ModelAndView handleArithmeticException(Exception e) {
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("exception", e);
-		mav.setViewName("/common/arithmeticException.jsp");
+		mav.setViewName("/common/arithmeticError.jsp");
 		return mav;
 	}
 	

@@ -12,6 +12,8 @@
 
 	<context:component-scan base-package="com.springbook.biz"></context:component-scan>	
 	
+	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+	
 	<!-- DataSource 설정 -->
 	<context:property-placeholder location="classpath:config/database.properties" />
 
@@ -23,9 +25,41 @@
 		<property name="password" value="${jdbc.password}" />
 	</bean>
 	
-	
 	<bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"/>
 		<property name="configLocation" value="classpath:sql-map-config.xml"/>
 	</bean>
+	<!-- 
+	<bean id="before" class="com.springbook.biz.common.BeforeAdvice"/>
+	 -->
+	<bean id="afterReturnning" class="com.springbook.biz.common.AfterReturnningAdvice"/>
+	<bean id="afterThrowing" class="com.springbook.biz.common.AfterThrowingAdvice"/>
+	<bean id="after" class="com.springbook.biz.common.AfterAdvice"/>
+	<bean id="around" class="com.springbook.biz.common.AroundAdvice"/>
+	
+	<aop:config>
+		<aop:pointcut expression="execution(* com.springbook.biz..*Impl.*(..))" id="allPointcut"/>
+		<aop:pointcut expression="execution(* com.springbook.biz..*Impl.get*(..))" id="getPointcut"/>
+		<!-- 
+		<aop:aspect ref="before">
+			<aop:before method="beforeLog" pointcut-ref="allPointcut"/>
+		</aop:aspect>
+		 -->
+		
+		<aop:aspect ref="afterReturnning">
+			<aop:after-returning method="afterLog" pointcut-ref="getPointcut" returning="returnObj"/>
+		</aop:aspect>
+		
+		<aop:aspect ref="afterThrowing">
+			<aop:after-throwing method="exceptionLog" pointcut-ref="allPointcut" throwing="exceptObj"/>
+		</aop:aspect>
+		
+		<aop:aspect ref="after">
+			<aop:after method="finallyLog" pointcut-ref="getPointcut"/>
+		</aop:aspect>
+		
+		<aop:aspect ref="around">
+			<aop:around method="aroundLog" pointcut-ref="allPointcut"/>
+		</aop:aspect>
+	</aop:config>
 </beans>
